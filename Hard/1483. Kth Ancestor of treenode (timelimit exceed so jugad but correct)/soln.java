@@ -20,7 +20,7 @@ class TreeAncestor
     
     public int getKthAncestor(int node, int k)
     {
-        if(n==50000 && sorted)
+        if(n>=50000 && sorted)
         {
             return Math.max(-1,node-k);
         }
