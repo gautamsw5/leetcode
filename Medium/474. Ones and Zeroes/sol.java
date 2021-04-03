@@ -1,4 +1,4 @@
-class MaxSelectTwoTarget
+class FindMaxForm
 {
     public int findMaxForm(String[] strs, int Z, int O)
     {

@@ -1,4 +1,4 @@
-class LongestValidParen
+class LongestValidParentheses
 {
     public int longestValidParentheses(String S)
     {
