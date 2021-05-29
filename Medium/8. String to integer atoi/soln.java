@@ -1,57 +1,45 @@
-class Solution {
-    public int myAtoi(String s)
+class Solution
+{
+    public int myAtoi(String S)
     {
-        int sign=-1,started=0;
-        long ans=0;
-        for(int i=0;i<s.length();i++)
+        char[] s = S.toCharArray();
+        int ret = 0, intmax = Integer.MAX_VALUE, intmin = Integer.MIN_VALUE, i=0, n = s.length;
+        while(i<n && s[i]==' ') i++;
+        if(i<n)
         {
-            if(s.charAt(i)=='-')
+            int sign = 1;    // Store sign
+            if(s[i]=='+')
             {
-                if(started==1)
-                {
-                    break;
-                }
-                sign=1;
+                i++;
             }
-            else if(Character.isDigit(s.charAt(i)))
+            else if(s[i]=='-')
             {
-                ans=10*ans-(s.charAt(i)-'0');
-                started=1;
+                sign=-1;
+                i++;
             }
-            else if(s.charAt(i)!=' ' && s.charAt(i)!='+')
+            if(sign==1)
             {
-                break;
+                while(i<n && s[i]>='0' && s[i]<='9')
+                {
+                    if(ret>intmax/10 || (ret==intmax/10 && s[i]>'7' && s[i]<='9'))  // Check overflow
+                        return intmax;
+                    ret = ret*10 + s[i]-'0';
+                    i++;
+                }
+                return ret;
             }
-            if(s.charAt(i)==' ' && started==1)
+            else
             {
-                break;
-            }
-            if(s.charAt(i)=='+' || s.charAt(i)=='-')
-            {
-                if(started==1)
+                while(i<n && s[i]>='0' && s[i]<='9')
                 {
-                    break;
+                    if(ret>intmax/10 || (ret==intmax/10 && s[i]>'7' && s[i]<='9'))  // Check overflow
+                        return intmin;
+                    ret = ret*10 + s[i]-'0';
+                    i++;
                 }
-                if(i<s.length()-1)
-                {
-                    if(!Character.isDigit(s.charAt(i+1)))
-                    {
-                        break;
-                    }
-                }
-            }
-            if(ans<=-2147483648)
-            {
-                if(sign==1)
-                {
-                    return -2147483648;
-                }
-                else
-                {
-                    return 2147483647;
-                }
+                return -ret;
             }
         }
-        return sign*(int)ans;
+        return ret;
     }
 }

@@ -1,109 +1,54 @@
-public class Node
-{
-    int x;
-    List<Node> adj;
-    public Node(int y)
-    {
-        x = y;
-        adj = new ArrayList<>();
-    }
-}
+import java.util.*;
 class Solution
 {
-    private boolean onedif(String s1, String s2)
+    public int longestStrChain(String[] words)
     {
-        int i = 0,
-        j = 0;
-        while(i<s1.length() && j<s2.length())
+        int ans = 0;
+        char[][] arr = new char[words.length][];
+        List<List<Integer>> list = new ArrayList<>();
+        for(int i=0; i<16; i++)
+            list.add(new ArrayList<>());
+        for(int i=0; i<words.length; i++)
         {
-            if(s1.charAt(i)==s2.charAt(j))
+            arr[i] = words[i].toCharArray();
+            list.get(arr[i].length-1).add(i);
+        }
+        int[] max_depth = new int[words.length];
+        for(int k=0; k<15; k++)
+        {
+            for(int a : list.get(k))
             {
-                i++;
-                j++;
-            }
-            else
-            {
-                i++;
-                if(i-j>1)
+                for(int b : list.get(k+1))
                 {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    public int longestStrChain(String[] Words)
-    {
-        List<List<String>> arr = new ArrayList<>();
-        List<List<Integer>> irr = new ArrayList<>();
-        List<String> words = new ArrayList<>();
-        Set<String> set = new HashSet<>();
-        for(String s:Words)
-        {
-            if(!set.contains(s))
-            {
-                set.add(s);
-                words.add(s);
-            }
-        }
-        Node[] graph = new Node[words.size()];
-        for(int i=0; i<17; i++)
-        {
-            arr.add(new ArrayList<>());
-            irr.add(new ArrayList<>());
-        }
-        int i=0;
-        for(String s:words)
-        {
-            arr.get(s.length()).add(s);
-            irr.get(s.length()).add(i);
-            graph[i] = new Node(i);
-            i++;
-        }
-        int ans = 1;
-        for(i=1; i<16; i++)
-        {
-            int j = 0;
-            for(String s:arr.get(i))
-            {
-                int k = 0;
-                for(String t:arr.get(i+1))
-                {
-                    if(onedif(t,s))
+                    int i=0, j=0;
+                    while(i<arr[a].length && j<arr[b].length)
                     {
-                        graph[irr.get(i).get(j)].adj.add(graph[irr.get(i+1).get(k)]);
-                    }
-                    k++;
-                }
-                j++;
-            }
-        }
-        for(i=1; i<16; i++)
-        {
-            for(int j : irr.get(i))
-            {
-                // bfs on graph[j]
-                Queue<Node> que = new LinkedList<>();
-                Queue<Node> nxt = new LinkedList<>();
-                que.add(graph[j]);
-                int d=0;
-                while(que.size()>0)
-                {
-                    while(que.size()>0)
-                    {
-                        Node cur = que.remove();
-                        for(Node v:cur.adj)
+                        if(arr[a][i]==arr[b][j])
                         {
-                            nxt.add(v);
+                            i++;
+                            j++;
                         }
+                        else
+                            j++;
                     }
-                    d++;
-                    que = nxt;
-                    nxt = new LinkedList<>();
+                    if(i==arr[a].length && j<=arr[b].length)
+                        max_depth[b] = Math.max(max_depth[b], 1+max_depth[a]);
                 }
-                ans = Math.max(ans,d);
             }
         }
-        return ans;
+        for(int i=0; i<words.length; i++)
+            ans = Math.max(ans, max_depth[i]);
+        return ans+1;
+    }
+    public static void main(String[] args)
+    {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        String[] words = new String[n];
+        for(int i=0; i<n; i++)
+            words[i] = sc.next();
+        Solution ob = new Solution();
+        System.out.println(ob.longestStrChain(words));
+        sc.close();
     }
 }
